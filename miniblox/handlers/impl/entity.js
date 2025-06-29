@@ -562,16 +562,39 @@ const self = class EntityHandler extends Handler {
 		client.on('flying', ({ onGround } = {}) => {
 			if (this.local.id < 0) return;
 			this.actions();
-			ClientSocket.sendPacket(new SPacketPlayerPosLook({onGround: onGround}));
+			this.local.inputSequenceNumber++;
+			ClientSocket.sendPacket(new SPacketPlayerInput({
+				sequenceNumber: this.local.inputSequenceNumber,
+				left: false,
+				right: false,
+				up: false,
+				down: false,
+				yaw: this.local.yaw,
+				pitch: this.local.pitch,
+				jump: false,
+				sneak: this.local.state[2] ?? false,
+				sprint: this.local.state[1] ?? false,
+				pos: this.local.pos
+			}));
 			this.abilities();
 		});
 		client.on('position', ({ x, y, z, onGround } = {}) => {
 			if (this.local.id < 0) return;
 			this.local.pos = {x: x, y: y, z: z};
 			this.actions();
-			ClientSocket.sendPacket(new SPacketPlayerPosLook({
-				pos: this.local.pos,
-				onGround: onGround
+			this.local.inputSequenceNumber++;
+			ClientSocket.sendPacket(new SPacketPlayerInput({
+				sequenceNumber: this.local.inputSequenceNumber,
+				left: false,
+				right: false,
+				up: false,
+				down: false,
+				yaw: this.local.yaw,
+				pitch: this.local.pitch,
+				jump: false,
+				sneak: this.local.state[2] ?? false,
+				sprint: this.local.state[1] ?? false,
+				pos: this.local.pos
 			}));
 			this.abilities(true);
 		});
@@ -580,10 +603,19 @@ const self = class EntityHandler extends Handler {
 			this.local.yaw = ((yaw * -1) - 180) * DEG2RAD;
 			this.local.pitch = (pitch * -1) * DEG2RAD;
 			this.actions();
-			ClientSocket.sendPacket(new SPacketPlayerPosLook({
+			this.local.inputSequenceNumber++;
+			ClientSocket.sendPacket(new SPacketPlayerInput({
+				sequenceNumber: this.local.inputSequenceNumber,
+				left: false,
+				right: false,
+				up: false,
+				down: false,
 				yaw: this.local.yaw,
 				pitch: this.local.pitch,
-				onGround: onGround
+				jump: false,
+				sneak: this.local.state[2] ?? false,
+				sprint: this.local.state[1] ?? false,
+				pos: this.local.pos
 			}));
 			this.abilities();
 		});
@@ -593,11 +625,19 @@ const self = class EntityHandler extends Handler {
 			this.local.yaw = ((yaw * -1) - 180) * DEG2RAD;
 			this.local.pitch = (pitch * -1) * DEG2RAD;
 			this.actions();
-			ClientSocket.sendPacket(new SPacketPlayerPosLook({
-				pos: this.local.pos,
+			this.local.inputSequenceNumber++;
+			ClientSocket.sendPacket(new SPacketPlayerInput({
+				sequenceNumber: this.local.inputSequenceNumber,
+				left: false,
+				right: false,
+				up: false,
+				down: false,
 				yaw: this.local.yaw,
 				pitch: this.local.pitch,
-				onGround: onGround
+				jump: false,
+				sneak: this.local.state[2] ?? false,
+				sprint: this.local.state[1] ?? false,
+				pos: this.local.pos
 			}));
 			this.abilities(true);
 		});
